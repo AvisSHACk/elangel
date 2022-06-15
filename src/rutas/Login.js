@@ -1,26 +1,38 @@
 import {Formulario, Contenedor, Input, Button, Parrafo} from "../components/Formulario";
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import { useState } from "react";
+import { auth, signInWithEmailAndPassword } from "./../firebase/firebaseConfig";
+
 const Login = () => {
     const [email, cambiarEmail] = useState("");
     const [password, cambiarPassword] = useState("");
+    const history = useNavigate();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            history("/");
+        } catch (error){
+            console.log(error.code);
+        }
+    }
 
     return (
         <Contenedor>
             <h1>Iniciar sesion</h1>
-            <Formulario action="">
+            <Formulario action="" onSubmit={handleSubmit}>
                 <Input
                     type="text" 
-                    name="" 
-                    id="" 
+                    name="email" 
+                    id="email" 
                     placeholder="email"
                     value={email}
                     onChange={(e) => cambiarEmail(e.target.value)}
                 />
                 <Input 
                     type="password" 
-                    name="" 
-                    id="" 
+                    name="password"
+                    id="password" 
                     placeholder="Contraseña"
                     value={password}
                     onChange={(e) => cambiarPassword(e.target.value)}
